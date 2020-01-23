@@ -32,18 +32,23 @@ def largest_k_elements(filename)
         max_elem[idx] = ele
         next
       end
-      max_elem.sort! if idx == k
+      max_elem.sort!.reverse! if idx == k
       next if ele < max_elem[k - 1]
 
-      j = k - 1
-      while j >= 0
-        if max_elem[j] < ele && max_elem[j - 1] > ele
-          max_elem[j] = ele
-          break
-        elsif max_elem[j] < ele
-          max_elem[j] = max_elem[j - 1]
+      j = 0
+      switch = nil
+      while j < k
+        if switch.nil?
+          if max_elem[j] < ele
+            switch = max_elem[j]
+            max_elem[j] = ele
+          end
+        else
+          temp = max_elem[j]
+          max_elem[j] = switch
+          switch = temp
         end
-        j -= 1
+        j += 1
       end
     end
     solutions << max_elem
