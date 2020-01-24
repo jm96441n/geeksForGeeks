@@ -14,50 +14,39 @@ require 'test/unit'
 require 'pry'
 extend Test::Unit::Assertions
 
-def largest_k_elements(filename)
-  file = File.open(filename, 'r')
+def largest_k_elements(arr, len, k)
+  max_elem = Array.new(k)
 
-  test_cases = file.gets.to_i
+  arr.each do |ele|
+    j = 0
+    switch = nil
+    while j < k
+      break if max_elem[k - 1] && max_elem[k - 1] > ele
 
-  solutions = []
-  i = 0
-  while i < test_cases
-    i += 1
-    k = file.gets.split(' ')[1].to_i
-    max_elem = Array.new(k)
-
-    file.gets.split(' ').each do |ele|
-      ele = ele.to_i
-      j = 0
-      switch = nil
-      while j < k
-        break if max_elem[k - 1] && max_elem[k - 1] > ele
-
-        if max_elem[j].nil?
-          max_elem[j] = ele
-          break
-        elsif switch.nil? && max_elem[j] < ele
-          switch = max_elem[j]
-          max_elem[j] = ele
-        elsif switch
-          temp = max_elem[j]
-          max_elem[j] = switch
-          switch = temp
-        end
-        j += 1
+      if max_elem[j].nil?
+        max_elem[j] = ele
+        break
+      elsif switch.nil? && max_elem[j] < ele
+        switch = max_elem[j]
+        max_elem[j] = ele
+      elsif switch
+        temp = max_elem[j]
+        max_elem[j] = switch
+        switch = temp
       end
+      j += 1
     end
-    solutions << max_elem
   end
-  solutions
+  max_elem
 end
 
 test_cases = {
-  inputFile1: [[787, 23], [50, 30, 23]]
+  '787 23' => [[12, 5, 787, 1, 23], 5, 2],
+  '50 30 23' => [[1, 23, 12, 9, 30, 2, 50], 7, 3]
 }
 
 test_cases.each do |k, v|
-  assert_equal(v, largest_k_elements("#{k}.txt"))
+  assert_equal(k.split(' ').map(&:to_i), largest_k_elements(*v))
 end
 
 =begin
