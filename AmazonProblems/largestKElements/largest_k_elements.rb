@@ -23,12 +23,45 @@ def largest_k_elements(filename)
   i = 0
   while i < test_cases
     i += 1
-    len, k = file.gets.split(' ').map(&:to_i)
-    eles = file.gets.split(' ').map(&:to_i)
+    k = file.gets.split(' ')[1].to_i
     max_elem = Array.new(k)
 
-    eles.each_with_index do |ele, idx|
-      if idx < k
+    file.gets.split(' ').each do |ele|
+      ele = ele.to_i
+      j = 0
+      switch = nil
+      while j < k
+        break if max_elem[k - 1] && max_elem[k - 1] > ele
+
+        if max_elem[j].nil?
+          max_elem[j] = ele
+          break
+        elsif switch.nil? && max_elem[j] < ele
+          switch = max_elem[j]
+          max_elem[j] = ele
+        elsif switch
+          temp = max_elem[j]
+          max_elem[j] = switch
+          switch = temp
+        end
+        j += 1
+      end
+    end
+    solutions << max_elem
+  end
+  solutions
+end
+
+test_cases = {
+  inputFile1: [[787, 23], [50, 30, 23]]
+}
+
+test_cases.each do |k, v|
+  assert_equal(v, largest_k_elements("#{k}.txt"))
+end
+
+=begin
+if idx < k
         max_elem[idx] = ele
         next
       end
@@ -51,15 +84,4 @@ def largest_k_elements(filename)
         j += 1
       end
     end
-    solutions << max_elem
-  end
-  solutions
-end
-
-test_cases = {
-  inputFile1: [[787, 23], [50, 30, 23]]
-}
-
-test_cases.each do |k, v|
-  assert_equal(v, largest_k_elements("#{k}.txt"))
-end
+=end
